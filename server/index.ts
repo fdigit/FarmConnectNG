@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
@@ -13,7 +14,13 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect(process.env.VITE_MONGODB_URI || '')
+const MONGODB_URI = process.env.VITE_MONGODB_URI;
+if (!MONGODB_URI) {
+  console.error('MongoDB URI is not defined in environment variables');
+  process.exit(1);
+}
+
+mongoose.connect(MONGODB_URI)
   .then(() => console.log('Connected to MongoDB'))
   .catch(err => console.error('MongoDB connection error:', err));
 
